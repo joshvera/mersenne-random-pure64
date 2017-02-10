@@ -51,6 +51,8 @@ library
     cc-options:
         -O3 -finline-functions -fomit-frame-pointer
         -fno-strict-aliasing --param max-inline-insns-single=1800
+        -msse2
+        -DHAVE_SSE2
 
     ghc-options:     -Wall -O2 -fexcess-precision
 
