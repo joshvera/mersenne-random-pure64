@@ -51,6 +51,8 @@ library
     cc-options:
         -O3 -finline-functions -fomit-frame-pointer
         -fno-strict-aliasing --param max-inline-insns-single=1800
+        -ffast-math
+        -mfpmath=sse
         -msse2
         -DHAVE_SSE2
 
