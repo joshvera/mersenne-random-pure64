@@ -38,6 +38,7 @@ import GHC.IOBase
 import GHC.Word
 import System.Random.Mersenne.Pure64.Base
 import System.Random.Mersenne.Pure64.Internal
+import Data.Bits ((.&.), xor)
 
 allocateBlock :: IO MTBlock
 allocateBlock =
@@ -81,17 +82,18 @@ lookupBlock (MTBlock b) (I# i) = W64# (indexWord64Array# b i)
 -- | MT's word mix function.
 --
 -- (MT applies this function to each Word64 from the buffer before returning it)
+{-
 mixWord64 :: Word64 -> Word64
 mixWord64 = c_mix_word64
+-}
 
 -- Alternative implementation - it's probably faster on 64 bit machines, but
 -- on Athlon XP it loses.
-{-
+mixWord64 :: Word64 -> Word64
 mixWord64 (W64# x0) = let
-    W64# x1 = W64# x0 `xor` (W64# (x0 `uncheckedShiftRL64#` 28#) .&. 0x5555555555555555)
-    W64# x2 = W64# x1 `xor` (W64# (x1 `uncheckedShiftL64#` 17#) .&. 0x71D67FFFEDA60000)
-    W64# x3 = W64# x2 `xor` (W64# (x2 `uncheckedShiftL64#` 37#) .&. 0xFFF7EEE000000000)
-    W64# x4 = W64# x3 `xor` (W64# (x3 `uncheckedShiftRL64#` 43#))
+    !(W64# x1) = W64# x0 `xor` (W64# (x0 `uncheckedShiftRL64#` 28#) .&. 0x5555555555555555)
+    !(W64# x2) = W64# x1 `xor` (W64# (x1 `uncheckedShiftL64#` 17#) .&. 0x71D67FFFEDA60000)
+    !(W64# x3) = W64# x2 `xor` (W64# (x2 `uncheckedShiftL64#` 37#) .&. 0xFFF7EEE000000000)
+    !(W64# x4) = W64# x3 `xor` (W64# (x3 `uncheckedShiftRL64#` 43#))
   in
     W64# x4
--}
